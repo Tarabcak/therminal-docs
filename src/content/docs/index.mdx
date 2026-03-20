@@ -1,20 +1,12 @@
 ---
-title: MostlyRight
-description: API documentation for Therminal — Kalshi temperature prediction markets + NWS weather data
-template: splash
-hero:
-  tagline: Kalshi temperature prediction markets + NWS weather data. One API.
-  actions:
-    - text: Get Started
-      link: /introduction/
-      icon: right-arrow
-    - text: API Reference
-      link: /api/candles/
-      variant: minimal
-      icon: external
+title: Introduction
+description: Therminal API — Kalshi temperature prediction markets + NWS weather data
+template: doc
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+**Therminal** provides programmatic access to Kalshi temperature prediction market data and NWS weather observations through a unified REST API.
 
 <CardGrid stagger>
 	<Card title="OHLCV Candles" icon="bars">
@@ -23,10 +15,45 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 	<Card title="Weather Observations" icon="sun">
 		Hourly METAR + SPECI data for 20 US stations since 2000. Temperature, wind, pressure, visibility, sky cover.
 	</Card>
-	<Card title="Parquet Downloads" icon="document">
-		Bulk historical data via presigned R2 URLs. Load directly into DuckDB, Pandas, or Polars.
+	<Card title="Bulk Downloads" icon="document">
+		Export any query as CSV or Parquet. Add `?format=parquet` to any data endpoint.
 	</Card>
 	<Card title="Python SDK" icon="seti:python">
 		`pip install therminal-py` — thin client with optional DataFrame support and CLI.
 	</Card>
 </CardGrid>
+
+## Base URL
+
+```
+https://api.mostlyright.xyz
+```
+
+All endpoints return JSON by default. Add `?format=csv` or `?format=parquet` for bulk downloads. All timestamps are UTC unless a `tz` parameter is specified.
+
+## Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Series** | A temperature metric for a location (e.g., `KXHIGHNY` = NYC daily high) |
+| **Event** | A specific date's prediction (e.g., `KXHIGHNY-26MAR20` = NYC high on March 20) |
+| **Market** | A strike within an event (e.g., `KXHIGHNY-26MAR20-T50` = "Will NYC high exceed 50°F?") |
+| **Candle** | OHLCV price data at 1-minute intervals. Prices are in cents (0–100). |
+| **Station** | A 3–4 letter NWS weather station code (e.g., `NYC`, `LAX`, `ORD`) |
+
+## Data freshness
+
+| Dataset | Latency | Source |
+|---------|---------|--------|
+| Candles (recent 14 days) | ~5 minutes | Kalshi API → Supabase |
+| Candles (historical) | ~1 hour | R2 parquets via DuckDB |
+| Observations (recent 14 days) | ~5 seconds | AWC → Supabase |
+| Observations (historical) | ~1 hour | R2 parquets via DuckDB |
+| Climate reports | ~24 hours | IEM → Supabase |
+
+## Full documentation
+
+- [API Reference](/api/candles/) — All endpoints with interactive playground
+- [Python SDK](/sdk/) — `pip install therminal-py`
+- [Data Sources](/data-sources/) — Where the data comes from
+- [Rate Limits & Errors](/errors/) — Error codes and rate limiting

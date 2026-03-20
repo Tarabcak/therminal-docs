@@ -12,17 +12,8 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/Tarabcak' },
 			],
 			sidebar: [
-				{ label: 'Introduction', slug: 'introduction' },
 				{ label: 'Quickstart', slug: 'quickstart' },
 				{ label: 'Authentication', slug: 'authentication' },
-				{
-					label: 'Downloads',
-					items: [
-						{ label: 'Observations', slug: 'downloads/observations' },
-						{ label: 'Candles', slug: 'downloads/candles' },
-						{ label: 'Climate', slug: 'downloads/climate' },
-					],
-				},
 				{
 					label: 'API Reference',
 					items: [
@@ -35,6 +26,7 @@ export default defineConfig({
 						{ label: 'Analysis', slug: 'api/analysis' },
 					],
 				},
+				{ label: 'Data Sources', slug: 'data-sources' },
 				{ label: 'Python SDK', slug: 'sdk' },
 				{ label: 'Rate Limits & Errors', slug: 'errors' },
 				{ label: 'Changelog', slug: 'changelog' },

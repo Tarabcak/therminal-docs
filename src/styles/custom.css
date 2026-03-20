@@ -105,3 +105,53 @@ nav.sidebar {
 	background: #e8e8e8;
 	color: #111;
 }
+
+/* Fix playground param alignment */
+.playground-params {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.param-row {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.param-row input {
+  width: 100% !important;
+}
+
+/* Fix prev/next button font sizes — GitBook style */
+.pagination-links a {
+  font-size: 0.85rem !important;
+}
+
+.pagination-links .link-title {
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+}
+
+.pagination-links .link-label {
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Starlight pagination override */
+.sl-pagination {
+  font-size: 0.85rem !important;
+}
+
+.sl-pagination a {
+  font-size: 0.85rem !important;
+}
+
+.sl-pagination .direction {
+  font-size: 0.7rem !important;
+}
+
+.sl-pagination .title {
+  font-size: 0.85rem !important;
+}

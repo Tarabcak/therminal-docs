@@ -1,0 +1,50 @@
+# Therminal API
+
+> Kalshi temperature prediction markets + NWS weather data. REST API at https://api.mostlyright.xyz
+
+## Endpoints
+
+All endpoints return JSON by default. Add ?format=csv or ?format=parquet for bulk downloads. Add ?columns=col1,col2 to select specific fields.
+
+### Health
+GET /health — API health status (DuckDB, Supabase, sync status)
+
+### Series
+GET /api/v1/series?active=true&limit=100 — List event series
+GET /api/v1/series/{ticker} — Get series detail
+
+### Markets
+GET /api/v1/markets?series={ticker}&station={code}&from={date}&to={date}&limit=1000 — List markets
+GET /api/v1/markets/{ticker} — Get market detail
+
+### Candles
+GET /api/v1/candles?market={ticker}&event={ticker}&station={code}&series={ticker}&from={date}&to={date}&interval={1|5|15|30|60|1440}&fill={true|false}&aggregate={minutes}&tz={timezone}&format={json|csv|parquet}&columns={col1,col2}&limit=10000 — OHLCV candlestick data
+
+### Observations
+GET /api/v1/observations?station={code}&from={date}&to={date}&type={METAR|SPECI}&units={raw|metric|imperial}&tz={timezone}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Weather observations
+
+### Climate
+GET /api/v1/climate?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD}&units={raw|metric}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Daily climate reports
+
+### Analysis
+GET /api/v1/analysis/climate-gaps?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD} — Find gaps in climate report history
+
+## Parameters
+- Dates: RFC3339 (2026-03-20T00:00:00Z) or YYYY-MM-DD for candles/observations. YYYY-MM-DD only for climate.
+- Timezone: UTC (default), station (uses station's IANA zone), or any IANA name (e.g., America/New_York)
+- Units: raw (default — °F, knots, inHg, miles), metric (°C, m/s, hPa, km), imperial (°F, mph, inHg, miles)
+- Format: json (default), csv (with Content-Disposition header), parquet (Zstd compressed)
+- Columns: comma-separated list of field names to include in csv/parquet output
+
+## Station codes
+3-4 letter NWS codes: NYC, LAX, ORD, MDW, DEN, MIA, ATL, DFW, HOU, BOS, AUS, LAS, PHX, MSY, SEA, SFO, DCA, PHL, TPA
+
+## Rate limits
+100 requests/second per IP, burst 20. 429 response with Retry-After header when exceeded.
+
+## Python SDK
+pip install therminal-py
+Documentation: https://pypi.org/project/therminal-py/
+
+## Full documentation
+https://docs.mostlyright.xyz
