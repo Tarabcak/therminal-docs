@@ -1,27 +1,9 @@
 ---
 title: Introduction
 description: Therminal API — Kalshi temperature prediction markets + NWS weather data
-template: doc
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
 **Therminal** provides programmatic access to Kalshi temperature prediction market data and NWS weather observations through a unified REST API.
-
-<CardGrid stagger>
-	<Card title="OHLCV Candles" icon="bars">
-		1-minute candlestick data for all Kalshi temperature markets since 2021. Forward-fill, aggregation, timezone conversion.
-	</Card>
-	<Card title="Weather Observations" icon="sun">
-		Hourly METAR + SPECI data for 20 US stations since 2000. Temperature, wind, pressure, visibility, sky cover.
-	</Card>
-	<Card title="Bulk Downloads" icon="document">
-		Export any query as CSV or Parquet. Add `?format=parquet` to any data endpoint.
-	</Card>
-	<Card title="Python SDK" icon="seti:python">
-		`pip install therminal-py` — thin client with optional DataFrame support and CLI.
-	</Card>
-</CardGrid>
 
 ## Base URL
 
