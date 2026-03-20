@@ -3,6 +3,28 @@ title: Changelog
 description: API version history
 ---
 
+## v1.1.0 — 2026-03-20
+
+### Downloads rework
+- **`?format=json|csv|parquet`** on all data endpoints (candles, observations, climate)
+- **`?columns=col1,col2`** for column selection in CSV/Parquet output
+- Removed old `/api/v1/download/*` presigned URL endpoints
+- CSV streams with `Content-Disposition` header for browser download
+- Parquet uses Zstd compression
+
+### Documentation
+- Added interactive API playground on every endpoint page
+- Added Data Sources page with full provenance details
+- Added `llms.txt` for AI agent integration
+- Replaced splash homepage with introduction
+- Fixed playground field alignment and prev/next button sizing
+
+### Python SDK v0.2.0
+- Added `format` and `columns` params to `candles()`, `observations()`, `climate()`
+- Removed `download_parquet()` (use `format="parquet"` instead)
+
+---
+
 ## v1.0.0 — 2026-03-20
 
 Initial public release.

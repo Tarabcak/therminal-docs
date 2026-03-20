@@ -19,6 +19,8 @@ Returns daily high/low temperature reports from NWS Climate (CLI) products. Thes
 | `from` | string | No | Start date (YYYY-MM-DD) |
 | `to` | string | No | End date (YYYY-MM-DD) |
 | `units` | string | No | `raw` (default °F) or `metric` (°C) |
+| `format` | string | No | Output format: `json` (default), `csv`, `parquet` |
+| `columns` | string | No | Comma-separated column names to include (e.g., `close,volume`) |
 | `limit` | integer | No | Max results (default 1000) |
 | `offset` | integer | No | Pagination offset |
 
@@ -72,3 +74,7 @@ client.climate(station="NYC", from_date="2026-03-18", to_date="2026-03-19")
     { name: "limit", default: "5" },
   ]}
 />
+
+## Data source
+
+Official NWS CLI products via [IEM](https://mesonet.agron.iastate.edu). Gaps filled with [ACIS](https://www.rcc-acis.org) estimates (tagged `source: acis`). See [Data Sources](/data-sources/) for report type priority and settlement rules.

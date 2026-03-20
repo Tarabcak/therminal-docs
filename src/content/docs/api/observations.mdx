@@ -21,6 +21,8 @@ Returns METAR and SPECI weather observations from 20 NWS stations across the US.
 | `type` | string | No | Filter by type: `METAR` or `SPECI` |
 | `units` | string | No | `raw` (default), `metric`, or `imperial` |
 | `tz` | string | No | `UTC` (default), `station`, or IANA name |
+| `format` | string | No | Output format: `json` (default), `csv`, `parquet` |
+| `columns` | string | No | Comma-separated column names to include (e.g., `close,volume`) |
 | `limit` | integer | No | Max results (default 1000) |
 | `offset` | integer | No | Pagination offset |
 
@@ -83,3 +85,7 @@ Field names like `temp_f` retain their original suffix even when converted to me
     { name: "limit", default: "3" },
   ]}
 />
+
+## Data source
+
+Live observations from [AWC](https://aviationweather.gov) (5-second polling). Historical from [IEM](https://mesonet.agron.iastate.edu) and [NOAA ISD](https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database). See [Data Sources](/data-sources/) for full details.
