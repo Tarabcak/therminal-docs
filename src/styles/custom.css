@@ -1,6 +1,7 @@
-/* MostlyRight — Terminal/Quant Aesthetic */
+/* MostlyRight — Terminal/Quant Aesthetic (GitBook-calibrated) */
 
-/* Light theme overrides (default) */
+/* ========== COLOR TOKENS ========== */
+
 :root {
 	--sl-color-accent-low: #e8e8e8;
 	--sl-color-accent: #333333;
@@ -18,9 +19,9 @@
 	--sl-color-hairline-light: #e0e0e0;
 	--sl-font: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
 	--sl-font-system: var(--sl-font);
+	--sl-line-height: 1.65;
 }
 
-/* Dark theme overrides */
 :root[data-theme='dark'] {
 	--sl-color-accent-low: #1a1a1a;
 	--sl-color-accent: #cccccc;
@@ -38,62 +39,137 @@
 	--sl-color-hairline-light: #2a2a2a;
 }
 
-/* Monospace everything */
+/* ========== TYPOGRAPHY (GitBook: 15px body, 1.65 line-height) ========== */
+
 body, .sl-markdown-content {
 	font-family: var(--sl-font);
+	font-size: 15px;
+	line-height: 1.65;
 	letter-spacing: -0.01em;
 }
 
-/* Title styling */
+.sl-markdown-content p {
+	margin: 0 0 1rem 0;
+}
+
+.sl-markdown-content li {
+	margin-bottom: 0.35rem;
+}
+
+/* ========== HEADINGS (GitBook: h1=24px, h2=18px, h3=16px) ========== */
+
+.sl-markdown-content h1 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	border-bottom: 1px solid var(--sl-color-hairline-light);
+	padding-bottom: 0.5rem;
+	margin-bottom: 1.5rem;
+	margin-top: 0;
+}
+
+.sl-markdown-content h2 {
+	font-size: 1.15rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	margin-top: 2rem;
+	margin-bottom: 0.75rem;
+}
+
+.sl-markdown-content h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-top: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+
+/* ========== INLINE CODE (GitBook: 13px, subtle background) ========== */
+
+.sl-markdown-content code:not(pre code) {
+	font-size: 13px;
+	padding: 2px 5px;
+	border-radius: 3px;
+	background: var(--sl-color-gray-6);
+}
+
+/* ========== CODE BLOCKS (GitBook: 13px, generous padding) ========== */
+
+.sl-markdown-content pre {
+	font-size: 13px;
+	padding: 14px 16px !important;
+	border: 1px solid var(--sl-color-hairline-light);
+	border-radius: 6px;
+	line-height: 1.5;
+}
+
+/* Copy button — reduce to 24px (GitBook-sized) */
+.copy-button,
+button[data-copy],
+.expressive-code .copy button {
+	width: 24px !important;
+	height: 24px !important;
+	min-width: 24px !important;
+	min-height: 24px !important;
+	padding: 3px !important;
+	opacity: 0.5;
+	transition: opacity 0.15s;
+}
+
+.copy-button:hover,
+button[data-copy]:hover,
+.expressive-code .copy button:hover {
+	opacity: 1;
+}
+
+.copy-button svg,
+button[data-copy] svg,
+.expressive-code .copy button svg {
+	width: 14px !important;
+	height: 14px !important;
+}
+
+/* ========== TABLES (GitBook: 13px, 10px padding) ========== */
+
+.sl-markdown-content table {
+	font-size: 13px;
+	width: 100%;
+	margin: 1rem 0;
+}
+
+.sl-markdown-content td,
+.sl-markdown-content th {
+	padding: 8px 10px;
+	border-bottom: 1px solid var(--sl-color-hairline-light);
+}
+
+.sl-markdown-content th {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	background: var(--sl-color-gray-6);
+}
+
+/* ========== SIDEBAR (GitBook: 13px, tight spacing) ========== */
+
+nav.sidebar {
+	font-size: 13px;
+}
+
+/* ========== SITE TITLE ========== */
+
 .site-title {
 	font-weight: 700 !important;
 	letter-spacing: -0.03em;
 }
 
-/* Code blocks — terminal feel */
-.sl-markdown-content pre {
-	border: 1px solid var(--sl-color-hairline-light);
-	border-radius: 4px;
-}
+/* ========== HTTP METHOD BADGE ========== */
 
-/* Headings — clean and tight */
-.sl-markdown-content h1 {
-	font-size: 1.8rem;
-	font-weight: 700;
-	letter-spacing: -0.02em;
-	border-bottom: 2px solid var(--sl-color-hairline-light);
-	padding-bottom: 0.5rem;
-}
-
-.sl-markdown-content h2 {
-	font-size: 1.3rem;
-	font-weight: 600;
-	letter-spacing: -0.01em;
-	margin-top: 2rem;
-}
-
-/* Tables — clean */
-.sl-markdown-content table {
-	font-size: 0.85rem;
-}
-
-.sl-markdown-content th {
-	text-transform: uppercase;
-	font-size: 0.75rem;
-	letter-spacing: 0.05em;
-}
-
-/* Sidebar — tighter */
-nav.sidebar {
-	font-size: 0.85rem;
-}
-
-/* Badge for methods */
 .http-method {
 	display: inline-block;
 	padding: 2px 8px;
 	border-radius: 3px;
-	font-size: 0.75rem;
+	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	background: #333;
@@ -106,52 +182,68 @@ nav.sidebar {
 	color: #111;
 }
 
-/* Fix playground param alignment */
-.playground-params {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
-}
+/* ========== PREV/NEXT PAGINATION (GitBook: small, subtle) ========== */
 
-.param-row {
-  display: flex !important;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.param-row input {
-  width: 100% !important;
-}
-
-/* Fix prev/next button font sizes — GitBook style */
-.pagination-links a {
-  font-size: 0.85rem !important;
-}
-
-.pagination-links .link-title {
-  font-size: 0.85rem !important;
-  font-weight: 500 !important;
-}
-
-.pagination-links .link-label {
-  font-size: 0.7rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Starlight pagination override */
-.sl-pagination {
-  font-size: 0.85rem !important;
-}
-
+.pagination-links a,
 .sl-pagination a {
-  font-size: 0.85rem !important;
+	font-size: 13px !important;
 }
 
-.sl-pagination .direction {
-  font-size: 0.7rem !important;
-}
-
+.pagination-links .link-title,
 .sl-pagination .title {
-  font-size: 0.85rem !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+}
+
+.pagination-links .link-label,
+.sl-pagination .direction {
+	font-size: 11px !important;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	opacity: 0.6;
+}
+
+/* ========== NOTE/CAUTION ASIDES ========== */
+
+.starlight-aside {
+	font-size: 14px;
+}
+
+/* ========== MOBILE ========== */
+
+@media (max-width: 768px) {
+	body, .sl-markdown-content {
+		font-size: 14px;
+	}
+
+	.sl-markdown-content h1 {
+		font-size: 1.3rem;
+	}
+
+	.sl-markdown-content h2 {
+		font-size: 1.05rem;
+	}
+
+	.sl-markdown-content pre {
+		font-size: 12px;
+		padding: 10px 12px !important;
+	}
+
+	/* Copy button — slightly larger touch target on mobile */
+	.copy-button,
+	button[data-copy],
+	.expressive-code .copy button {
+		width: 28px !important;
+		height: 28px !important;
+	}
+
+	.sl-markdown-content table {
+		display: block;
+		overflow-x: auto;
+		font-size: 12px;
+	}
+
+	nav.sidebar {
+		font-size: 14px;
+	}
 }
