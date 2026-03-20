@@ -22,7 +22,7 @@ Returns OHLCV (Open, High, Low, Close, Volume) candlestick data for Kalshi tempe
 | `from` | string | No | Start time (RFC3339 or YYYY-MM-DD). Default: 24h ago |
 | `to` | string | No | End time (RFC3339 or YYYY-MM-DD). Default: now |
 | `interval` | integer | No | Candle interval: `1`, `5`, `15`, `30`, `60`, `1440` |
-| `fill` | string | No | Forward-fill gaps. Default: `true`. Set `false` to get sparse data |
+| `fill` | string | No | Forward-fill gaps. Default: `true`. JSON only — ignored for csv/parquet |
 | `aggregate` | integer | No | Roll up to a larger interval (minutes). E.g., `60` for hourly |
 | `tz` | string | No | Timezone: `UTC` (default), `station`, or IANA name |
 | `format` | string | No | Output format: `json` (default), `csv`, `parquet` |
@@ -37,6 +37,10 @@ When `fill=true` (default), gaps between traded candles are filled with the prev
 - `open` = `high` = `low` = `close` = previous candle's close
 - `volume` = 0, `open_interest` = previous candle's open_interest
 - `filled` = `true` (so you can distinguish real trades from fills)
+
+:::note
+Forward-fill is only available for JSON output. When using `?format=csv` or `?format=parquet`, the `fill` parameter is ignored and only real traded candles are returned. This prevents memory issues with large date ranges.
+:::
 
 ### Aggregation
 

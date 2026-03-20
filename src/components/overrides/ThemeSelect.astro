@@ -1,0 +1,81 @@
+---
+// Custom theme toggle replacing Starlight's default dropdown
+---
+
+<starlight-theme-toggle>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <span class="theme-label">Light</span>
+  </button>
+</starlight-theme-toggle>
+
+<script is:inline>
+  StarlightThemeProvider.updatePickers();
+</script>
+
+<script>
+  const storageKey = 'starlight-theme';
+
+  function getEffectiveTheme(): 'light' | 'dark' {
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(storageKey) : null;
+    if (stored === 'light' || stored === 'dark') return stored;
+    return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function setTheme(theme: 'light' | 'dark') {
+    document.documentElement.dataset.theme = theme;
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(storageKey, theme);
+    }
+    updateLabel(theme);
+  }
+
+  function updateLabel(theme: string) {
+    document.querySelectorAll('.theme-label').forEach(el => {
+      el.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    });
+  }
+
+  class StarlightThemeToggle extends HTMLElement {
+    constructor() {
+      super();
+      const current = getEffectiveTheme();
+      setTheme(current);
+
+      this.querySelector('.theme-toggle')?.addEventListener('click', () => {
+        const next = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+      });
+    }
+  }
+  customElements.define('starlight-theme-toggle', StarlightThemeToggle);
+</script>
+
+<style>
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 4px 12px;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--sl-color-white);
+    font-family: var(--sl-font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .theme-toggle:hover {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 50rem) {
+    .theme-toggle {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+    }
+  }
+</style>

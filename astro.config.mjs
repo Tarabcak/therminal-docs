@@ -8,6 +8,9 @@ export default defineConfig({
 			title: 'MostlyRight',
 			description: 'API documentation for Therminal — Kalshi temperature prediction markets + NWS weather data',
 			customCss: ['./src/styles/custom.css'],
+			components: {
+				ThemeSelect: './src/components/overrides/ThemeSelect.astro',
+			},
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/Tarabcak' },
 			],
