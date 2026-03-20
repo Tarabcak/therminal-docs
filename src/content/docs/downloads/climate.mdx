@@ -1,0 +1,39 @@
+---
+title: Download Climate
+description: Bulk download daily climate report parquet files
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Download yearly climate report data as Parquet files.
+
+:::caution
+Climate parquet export is not yet implemented in the ingest pipeline. This endpoint will return a presigned URL, but the file may not exist in R2 yet. Use the [Climate API](/api/climate) for now.
+:::
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/download/climate`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `station` | string | **Yes** | Station code |
+| `year` | integer | **Yes** | Year |
+
+## Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/download/climate?station=NYC&year=2024"
+```
+
+### Try it
+
+<ApiPlayground
+  endpoint="/api/v1/download/climate"
+  params={[
+    { name: "station", default: "NYC" },
+    { name: "year", default: "2024" },
+  ]}
+/>

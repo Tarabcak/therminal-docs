@@ -1,0 +1,58 @@
+---
+title: Analysis
+description: Climate gap analysis
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+## Climate Gaps
+
+Finds missing dates in the daily climate report history for a station.
+
+<span class="http-method">GET</span> `/api/v1/analysis/climate-gaps`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `station` | string | **Yes** | Station code |
+| `from` | string | No | Start date (YYYY-MM-DD). Default: 5 years ago |
+| `to` | string | No | End date (YYYY-MM-DD). Default: today |
+
+Maximum date range: 10 years.
+
+### Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/analysis/climate-gaps?station=NYC&from=2026-03-01&to=2026-03-20"
+```
+
+```python
+from therminal import TherminalClient
+client = TherminalClient()
+client.climate_gaps(station="NYC", from_date="2026-03-01")
+```
+
+### Response
+
+```json
+[
+  {
+    "station_code": "NYC",
+    "gap_start": "2026-03-20",
+    "gap_end": "2026-03-20",
+    "missing_days": 1
+  }
+]
+```
+
+### Try it
+
+<ApiPlayground
+  endpoint="/api/v1/analysis/climate-gaps"
+  params={[
+    { name: "station", default: "NYC" },
+    { name: "from", default: "2026-03-01" },
+    { name: "to", default: "2026-03-20" },
+  ]}
+/>

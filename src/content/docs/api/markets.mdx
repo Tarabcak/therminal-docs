@@ -1,0 +1,70 @@
+---
+title: Markets
+description: List and retrieve prediction markets
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+A market is a single strike within an event (e.g., "Will NYC high exceed 50°F on March 20?").
+
+## List markets
+
+<span class="http-method">GET</span> `/api/v1/markets`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `series` | string | No | Filter by series ticker |
+| `station` | string | No | Filter by station code |
+| `from` | string | No | Close time &gt;= (RFC3339) |
+| `to` | string | No | Close time &lt;= (RFC3339) |
+| `limit` | integer | No | Max results (default 1000) |
+| `offset` | integer | No | Pagination offset |
+
+### Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/markets?series=KXHIGHNY&limit=3"
+```
+
+```python
+from therminal import TherminalClient
+client = TherminalClient()
+client.markets(series="KXHIGHNY", limit=3)
+```
+
+### Response
+
+```json
+[
+  {
+    "ticker": "KXHIGHNY-26MAR20-T50",
+    "event_ticker": "KXHIGHNY-26MAR20",
+    "series_ticker": "KXHIGHNY",
+    "status": "active",
+    "result": "",
+    "close_time": "2026-03-21T03:59:00Z"
+  }
+]
+```
+
+### Try it
+
+<ApiPlayground
+  endpoint="/api/v1/markets"
+  params={[
+    { name: "series", default: "KXHIGHNY" },
+    { name: "limit", default: "5" },
+  ]}
+/>
+
+## Get market detail
+
+<span class="http-method">GET</span> `/api/v1/markets/{ticker}`
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/markets/KXHIGHNY-26MAR20-T50"
+```
+
+Returns a single market object. Returns `404` if not found.

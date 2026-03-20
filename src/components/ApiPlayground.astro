@@ -1,0 +1,132 @@
+---
+interface Props {
+  endpoint: string;
+  method?: string;
+  params?: { name: string; default?: string; placeholder?: string }[];
+}
+
+const { endpoint, method = 'GET', params = [] } = Astro.props;
+const id = endpoint.replace(/[^a-z0-9]/gi, '_');
+---
+
+<div class="api-playground" id={`playground-${id}`}>
+  <div class="playground-header">
+    <span class="http-method">{method}</span>
+    <code class="playground-endpoint">{endpoint}</code>
+    <button class="playground-send" id={`send-${id}`}>Send →</button>
+  </div>
+  {params.length > 0 && (
+    <div class="playground-params">
+      {params.map(p => (
+        <div class="param-row">
+          <label>{p.name}</label>
+          <input
+            type="text"
+            data-param={p.name}
+            value={p.default || ''}
+            placeholder={p.placeholder || ''}
+          />
+        </div>
+      ))}
+    </div>
+  )}
+  <pre class="playground-response" id={`response-${id}`}><code>Click "Send →" to try it live</code></pre>
+</div>
+
+<script define:vars={{ endpoint, id }}>
+  document.getElementById(`send-${id}`)?.addEventListener('click', async () => {
+    const container = document.getElementById(`playground-${id}`);
+    const responseEl = document.getElementById(`response-${id}`);
+    if (!container || !responseEl) return;
+
+    const inputs = container.querySelectorAll('input[data-param]');
+    const params = new URLSearchParams();
+    inputs.forEach(input => {
+      if (input.value) params.set(input.dataset.param, input.value);
+    });
+
+    const url = `https://api.mostlyright.xyz${endpoint}${params.toString() ? '?' + params.toString() : ''}`;
+    responseEl.innerHTML = '<code>Loading...</code>';
+
+    try {
+      const resp = await fetch(url);
+      const data = await resp.json();
+      responseEl.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
+    } catch (err) {
+      responseEl.innerHTML = `<code>Error: ${err.message}</code>`;
+    }
+  });
+</script>
+
+<style>
+  .api-playground {
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+  }
+  .playground-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--sl-color-gray-6);
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+  }
+  .playground-endpoint {
+    flex: 1;
+    font-size: 0.85rem;
+  }
+  .playground-send {
+    padding: 4px 16px;
+    border: 1px solid var(--sl-color-gray-3);
+    border-radius: 4px;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-family: var(--sl-font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .playground-send:hover {
+    opacity: 0.8;
+  }
+  .playground-params {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+  }
+  .param-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .param-row label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-gray-2);
+  }
+  .param-row input {
+    padding: 3px 8px;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 3px;
+    font-family: var(--sl-font);
+    font-size: 0.8rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-white);
+    width: 140px;
+  }
+  .playground-response {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    max-height: 400px;
+    overflow: auto;
+    font-size: 0.8rem;
+  }
+</style>

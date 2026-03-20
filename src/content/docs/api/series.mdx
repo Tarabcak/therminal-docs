@@ -1,0 +1,74 @@
+---
+title: Series
+description: List and retrieve event series
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+A series represents a temperature metric for a location (e.g., `KXHIGHNY` = NYC daily high temperature).
+
+## List series
+
+<span class="http-method">GET</span> `/api/v1/series`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `active` | string | No | Filter by active status (`true` or `false`) |
+| `limit` | integer | No | Max results (default 1000, max 10000) |
+| `offset` | integer | No | Pagination offset |
+
+### Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/series?active=true&limit=5"
+```
+
+```python
+from therminal import TherminalClient
+client = TherminalClient()
+client.series(active=True, limit=5)
+```
+
+### Response
+
+```json
+[
+  {
+    "ticker": "KXHIGHNY",
+    "measure_type": "high",
+    "title": "Highest temperature in NYC",
+    "station_code": "NYC",
+    "category": "Climate and Weather",
+    "frequency": "daily",
+    "tags": ["Daily temperature"],
+    "active": true,
+    "last_seen_at": "2026-03-20T11:27:56.156Z"
+  }
+]
+```
+
+### Try it
+
+<ApiPlayground
+  endpoint="/api/v1/series"
+  params={[
+    { name: "active", placeholder: "true" },
+    { name: "limit", default: "5" },
+  ]}
+/>
+
+## Get series detail
+
+<span class="http-method">GET</span> `/api/v1/series/{ticker}`
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/series/KXHIGHNY"
+```
+
+```python
+client.series_detail("KXHIGHNY")
+```
+
+Returns a single series object. Returns `404` if not found.

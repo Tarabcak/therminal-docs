@@ -1,0 +1,85 @@
+---
+title: Observations
+description: Get hourly weather observations (METAR/SPECI)
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Returns METAR and SPECI weather observations from 20 NWS stations across the US. Data includes temperature, dewpoint, wind, pressure, visibility, sky cover, and raw METAR text.
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/observations`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `station` | string | No | Station code (e.g., `NYC`, `LAX`, `ORD`) |
+| `from` | string | No | Start time (RFC3339). Default: 24h ago |
+| `to` | string | No | End time (RFC3339). Default: now |
+| `type` | string | No | Filter by type: `METAR` or `SPECI` |
+| `units` | string | No | `raw` (default), `metric`, or `imperial` |
+| `tz` | string | No | `UTC` (default), `station`, or IANA name |
+| `limit` | integer | No | Max results (default 1000) |
+| `offset` | integer | No | Pagination offset |
+
+### Unit conversion
+
+| Field | Raw | Metric | Imperial |
+|-------|-----|--------|----------|
+| Temperature | °F | °C | °F |
+| Wind speed | knots | m/s | mph |
+| Pressure (altimeter) | inHg | hPa | inHg |
+| Visibility | miles | km | miles |
+| Precipitation | inches | mm | inches |
+| Snow depth | inches | mm | inches |
+
+## Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/observations?station=NYC&units=metric&limit=2"
+```
+
+```python
+from therminal import TherminalClient
+
+client = TherminalClient()
+obs = client.observations(station="NYC", units="metric", limit=2, as_dataframe=True)
+```
+
+## Response
+
+```json
+[
+  {
+    "station_code": "NYC",
+    "observed_at": "2026-03-20T15:51:00Z",
+    "observation_type": "METAR",
+    "source": "awc",
+    "temp_f": 10.61,
+    "dewpoint_f": 0,
+    "wind_speed_kt": 2,
+    "altimeter_inhg": 1017.09,
+    "visibility_miles": 16.09,
+    "sky_cover_1": "CLR",
+    "raw_metar": "METAR KNYC 201551Z AUTO VRB04KT 10SM CLR 11/00 A3007 RMK AO2 SLP173 ..."
+  }
+]
+```
+
+:::note
+Field names like `temp_f` retain their original suffix even when converted to metric. The value is in the requested unit system.
+:::
+
+## Try it
+
+<ApiPlayground
+  endpoint="/api/v1/observations"
+  params={[
+    { name: "station", default: "NYC" },
+    { name: "units", placeholder: "raw" },
+    { name: "tz", placeholder: "UTC" },
+    { name: "limit", default: "3" },
+  ]}
+/>

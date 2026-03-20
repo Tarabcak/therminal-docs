@@ -1,0 +1,107 @@
+/* MostlyRight — Terminal/Quant Aesthetic */
+
+/* Light theme overrides (default) */
+:root {
+	--sl-color-accent-low: #e8e8e8;
+	--sl-color-accent: #333333;
+	--sl-color-accent-high: #000000;
+	--sl-color-white: #000000;
+	--sl-color-gray-1: #333333;
+	--sl-color-gray-2: #555555;
+	--sl-color-gray-3: #888888;
+	--sl-color-gray-4: #cccccc;
+	--sl-color-gray-5: #e8e8e8;
+	--sl-color-gray-6: #f5f5f5;
+	--sl-color-black: #ffffff;
+	--sl-color-bg-nav: #fafafa;
+	--sl-color-bg-sidebar: #f8f8f8;
+	--sl-color-hairline-light: #e0e0e0;
+	--sl-font: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+	--sl-font-system: var(--sl-font);
+}
+
+/* Dark theme overrides */
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #1a1a1a;
+	--sl-color-accent: #cccccc;
+	--sl-color-accent-high: #ffffff;
+	--sl-color-white: #e8e8e8;
+	--sl-color-gray-1: #cccccc;
+	--sl-color-gray-2: #aaaaaa;
+	--sl-color-gray-3: #777777;
+	--sl-color-gray-4: #444444;
+	--sl-color-gray-5: #2a2a2a;
+	--sl-color-gray-6: #1a1a1a;
+	--sl-color-black: #111111;
+	--sl-color-bg-nav: #0d0d0d;
+	--sl-color-bg-sidebar: #111111;
+	--sl-color-hairline-light: #2a2a2a;
+}
+
+/* Monospace everything */
+body, .sl-markdown-content {
+	font-family: var(--sl-font);
+	letter-spacing: -0.01em;
+}
+
+/* Title styling */
+.site-title {
+	font-weight: 700 !important;
+	letter-spacing: -0.03em;
+}
+
+/* Code blocks — terminal feel */
+.sl-markdown-content pre {
+	border: 1px solid var(--sl-color-hairline-light);
+	border-radius: 4px;
+}
+
+/* Headings — clean and tight */
+.sl-markdown-content h1 {
+	font-size: 1.8rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	border-bottom: 2px solid var(--sl-color-hairline-light);
+	padding-bottom: 0.5rem;
+}
+
+.sl-markdown-content h2 {
+	font-size: 1.3rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	margin-top: 2rem;
+}
+
+/* Tables — clean */
+.sl-markdown-content table {
+	font-size: 0.85rem;
+}
+
+.sl-markdown-content th {
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	letter-spacing: 0.05em;
+}
+
+/* Sidebar — tighter */
+nav.sidebar {
+	font-size: 0.85rem;
+}
+
+/* Badge for methods */
+.http-method {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	background: #333;
+	color: #fff;
+	margin-right: 0.5rem;
+}
+
+:root[data-theme='dark'] .http-method {
+	background: #e8e8e8;
+	color: #111;
+}

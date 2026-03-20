@@ -1,0 +1,110 @@
+---
+title: Candles
+description: Get OHLCV candlestick data for prediction markets
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Returns OHLCV (Open, High, Low, Close, Volume) candlestick data for Kalshi temperature prediction markets. Prices are in cents (0–100 range for binary markets).
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/candles`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `market` | string | No | Market ticker (e.g., `KXHIGHNY-26MAR20-T50`) |
+| `event` | string | No | Event ticker (e.g., `KXHIGHNY-26MAR20`) |
+| `station` | string | No | Station code (e.g., `NYC`) |
+| `series` | string | No | Series ticker (e.g., `KXHIGHNY`) |
+| `from` | string | No | Start time (RFC3339 or YYYY-MM-DD). Default: 24h ago |
+| `to` | string | No | End time (RFC3339 or YYYY-MM-DD). Default: now |
+| `interval` | integer | No | Candle interval: `1`, `5`, `15`, `30`, `60`, `1440` |
+| `fill` | string | No | Forward-fill gaps. Default: `true`. Set `false` to get sparse data |
+| `aggregate` | integer | No | Roll up to a larger interval (minutes). E.g., `60` for hourly |
+| `tz` | string | No | Timezone: `UTC` (default), `station`, or IANA name |
+| `limit` | integer | No | Max results (default 10000) |
+| `offset` | integer | No | Pagination offset |
+
+### Forward-fill
+
+When `fill=true` (default), gaps between traded candles are filled with the previous close price:
+
+- `open` = `high` = `low` = `close` = previous candle's close
+- `volume` = 0, `open_interest` = previous candle's open_interest
+- `filled` = `true` (so you can distinguish real trades from fills)
+
+### Aggregation
+
+Set `aggregate=60` to roll up 1-minute candles to hourly:
+
+- `open` = first candle's open
+- `high` = max of all highs
+- `low` = min of all lows
+- `close` = last candle's close
+- `volume` = sum of all volumes
+
+## Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/candles?market=KXHIGHNY-26MAR20-T50&interval=1&from=2026-03-19T14:00:00Z&to=2026-03-19T14:05:00Z"
+```
+
+```python
+from therminal import TherminalClient
+
+client = TherminalClient()
+candles = client.candles(
+    market="KXHIGHNY-26MAR20-T50",
+    interval=1,
+    from_date="2026-03-19",
+    as_dataframe=True,  # returns Pandas DataFrame
+)
+```
+
+## Response
+
+```json
+[
+  {
+    "market_ticker": "KXHIGHNY-26MAR20-T50",
+    "period_interval": 1,
+    "end_period_ts": "2026-03-19T14:02:00Z",
+    "open": 42,
+    "high": 45,
+    "low": 40,
+    "close": 43,
+    "volume": 100,
+    "open_interest": 500,
+    "filled": false
+  },
+  {
+    "market_ticker": "KXHIGHNY-26MAR20-T50",
+    "period_interval": 1,
+    "end_period_ts": "2026-03-19T14:03:00Z",
+    "open": 43,
+    "high": 43,
+    "low": 43,
+    "close": 43,
+    "volume": 0,
+    "open_interest": 500,
+    "filled": true
+  }
+]
+```
+
+## Try it
+
+<ApiPlayground
+  endpoint="/api/v1/candles"
+  params={[
+    { name: "market", placeholder: "KXHIGHNY-26MAR20-T50" },
+    { name: "interval", default: "1" },
+    { name: "from", placeholder: "2026-03-19" },
+    { name: "to", placeholder: "2026-03-20" },
+    { name: "fill", default: "false" },
+    { name: "limit", default: "5" },
+  ]}
+/>

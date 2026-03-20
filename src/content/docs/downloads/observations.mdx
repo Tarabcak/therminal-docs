@@ -1,0 +1,80 @@
+---
+title: Download Observations
+description: Bulk download weather observation parquet files
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Download complete yearly observation data as Parquet files. Each file contains all METAR and SPECI observations for a station for one year, Zstd compressed.
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/download/observations`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `station` | string | **Yes** | Station code (3–4 letters, e.g., `NYC`) |
+| `year` | integer | **Yes** | Year (e.g., `2024`) |
+
+## Example
+
+```bash
+# Get the presigned URL
+curl "https://api.mostlyright.xyz/api/v1/download/observations?station=NYC&year=2024"
+
+# Download the parquet file using the returned URL
+curl -o NYC_2024.parquet "<presigned_url>"
+```
+
+```python
+from therminal import TherminalClient
+
+client = TherminalClient()
+
+# Save to disk
+path = client.download_parquet("observations", station="NYC", year=2024)
+
+# Or load directly into a DataFrame
+df = client.download_parquet("observations", station="NYC", year=2024, load=True)
+```
+
+## Response
+
+```json
+{
+  "url": "https://r2.cloudflare.com/...?signature=...",
+  "key": "observations/station=NYC/2024.parquet",
+  "expires_in": "5m"
+}
+```
+
+The presigned URL is valid for **5 minutes**. Files are served directly from Cloudflare R2 (global CDN).
+
+### Parquet schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `station_code` | string | Station code |
+| `observed_at` | timestamp | Observation time (UTC) |
+| `observation_type` | string | METAR or SPECI |
+| `source` | string | Data source (iem, awc, noaa_isd) |
+| `temp_f` | float | Temperature (°F) |
+| `dewpoint_f` | float | Dewpoint (°F) |
+| `wind_dir_degrees` | int16 | Wind direction (degrees) |
+| `wind_speed_kt` | int16 | Wind speed (knots) |
+| `altimeter_inhg` | float | Altimeter (inHg) |
+| `visibility_miles` | float | Visibility (miles) |
+| `raw_metar` | string | Raw METAR text |
+| ... | | 30 columns total |
+
+### Try it
+
+<ApiPlayground
+  endpoint="/api/v1/download/observations"
+  params={[
+    { name: "station", default: "NYC" },
+    { name: "year", default: "2024" },
+  ]}
+/>

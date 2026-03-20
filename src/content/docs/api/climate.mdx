@@ -1,0 +1,74 @@
+---
+title: Climate
+description: Get daily climate reports (NWS CLI products)
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Returns daily high/low temperature reports from NWS Climate (CLI) products. These are the official settlement source for Kalshi temperature markets.
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/climate`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `station` | string | No | Station code (e.g., `NYC`, `LAX`) |
+| `from` | string | No | Start date (YYYY-MM-DD) |
+| `to` | string | No | End date (YYYY-MM-DD) |
+| `units` | string | No | `raw` (default °F) or `metric` (°C) |
+| `limit` | integer | No | Max results (default 1000) |
+| `offset` | integer | No | Pagination offset |
+
+### Report types
+
+| Type | Priority | Description |
+|------|----------|-------------|
+| `final` | Highest | Official daily report |
+| `correction` | High | Corrected report |
+| `preliminary` | Medium | Preliminary (not used for settlement) |
+| `estimated` | Lowest | ACIS-derived gap filler |
+
+## Example
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/climate?station=NYC&from=2026-03-18&to=2026-03-19"
+```
+
+```python
+from therminal import TherminalClient
+client = TherminalClient()
+client.climate(station="NYC", from_date="2026-03-18", to_date="2026-03-19")
+```
+
+## Response
+
+```json
+[
+  {
+    "station_code": "NYC",
+    "observation_date": "2026-03-19",
+    "high_temp_f": 44,
+    "low_temp_f": 32,
+    "report_type": "final",
+    "source": "iem",
+    "product_id": "202603200631-KOKX-CDUS41-CLINYC",
+    "issued_at": "2026-03-20T06:31:00Z"
+  }
+]
+```
+
+## Try it
+
+<ApiPlayground
+  endpoint="/api/v1/climate"
+  params={[
+    { name: "station", default: "NYC" },
+    { name: "from", default: "2026-03-15" },
+    { name: "to", default: "2026-03-20" },
+    { name: "units", placeholder: "raw" },
+    { name: "limit", default: "5" },
+  ]}
+/>

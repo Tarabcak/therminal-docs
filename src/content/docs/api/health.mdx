@@ -1,0 +1,53 @@
+---
+title: Health
+description: Check API health status
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Returns the health status of all API dependencies.
+
+## Request
+
+<span class="http-method">GET</span> `/health`
+
+No parameters.
+
+## Example
+
+```bash
+curl https://api.mostlyright.xyz/health
+```
+
+```python
+from therminal import TherminalClient
+client = TherminalClient()
+client.health()
+```
+
+## Response
+
+```json
+{
+  "status": "ok",
+  "duckdb": "ok",
+  "supabase": "ok",
+  "sync": {
+    "last_sync": "2026-03-20T16:20:24Z",
+    "file_count": 548,
+    "is_stale": false
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `status` | `ok` or `degraded` |
+| `duckdb` | Embedded DuckDB status |
+| `supabase` | Supabase Postgres status |
+| `sync.file_count` | Number of parquet files synced from R2 |
+| `sync.is_stale` | `true` if last sync was >2 hours ago |
+
+## Try it
+
+<ApiPlayground endpoint="/health" />
