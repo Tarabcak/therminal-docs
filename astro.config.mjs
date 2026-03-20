@@ -16,7 +16,7 @@ export default defineConfig({
 			],
 			sidebar: [
 				{ label: 'Quickstart', slug: 'quickstart' },
-				{ label: 'Access', slug: 'authentication' },
+				{ label: 'Access', slug: 'access' },
 				{
 					label: 'API Reference',
 					items: [
