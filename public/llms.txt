@@ -39,6 +39,9 @@ GET /api/v1/analysis/climate-gaps?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-D
 ## Station codes
 3-4 letter NWS codes: NYC, LAX, ORD, MDW, DEN, MIA, ATL, DFW, HOU, BOS, AUS, LAS, PHX, MSY, SEA, SFO, DCA, PHL, TPA
 
+## Response limits
+JSON: 50,000 rows max (paginated via limit/offset, default 1000, max 10000 per page). CSV/Parquet: 500,000 rows max (full result set, no pagination). For bulk ML data, use format=parquet.
+
 ## Rate limits
 100 requests/second per IP, burst 20. 429 response with Retry-After header when exceeded.
 
