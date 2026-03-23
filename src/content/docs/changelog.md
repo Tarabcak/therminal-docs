@@ -3,6 +3,26 @@ title: Changelog
 description: API version history
 ---
 
+## v1.2.0 — 2026-03-23
+
+### 1-Minute ASOS Observations (OMO)
+- **`?resolution=1min`** on `/api/v1/observations` returns 1-minute ASOS data from NCEI (DSI-6406)
+- ~166M records, 2000–2026, 19 of 20 stations (NYC excluded — Central Park is not an airport ASOS)
+- Response fields: `station_code`, `observed_at`, `temp_c`, `dewpoint_c`, `pressure1_inhg`, `pressure2_inhg`, `pressure3_inhg`, `precip_type`, `precip_in`
+- `?units=` rejected with 400 for `resolution=1min` (temperatures always integer °C)
+- `?type=` silently ignored for `resolution=1min`
+- `?format=csv|parquet` and `?columns=` work normally
+
+### NCEI CLI Backfill
+- New report type **`ncei_final`** (priority 2.5) on `/api/v1/climate` — GHCN-Daily CF6 first-published values from NCEI superghcnd diffs
+- Source tagged as `ncei`
+
+### Python SDK v0.3.0
+- Added `resolution` parameter to `observations()` — `resolution="1min"` for 1-minute ASOS data
+- CLI: `therminal observations STATION --resolution 1min`
+
+---
+
 ## v1.1.0 — 2026-03-20
 
 ### Downloads rework

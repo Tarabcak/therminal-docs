@@ -18,6 +18,7 @@ Returns METAR and SPECI weather observations from 20 NWS stations across the US.
 | `station` | string | No | Station code (e.g., `NYC`, `LAX`, `ORD`) |
 | `from` | string | No | Start time (RFC3339). Default: 24h ago |
 | `to` | string | No | End time (RFC3339). Default: now |
+| `resolution` | string | No | `hourly` (default) or `1min` (1-minute ASOS OMO data) |
 | `type` | string | No | Filter by type: `METAR` or `SPECI` |
 | `units` | string | No | `raw` (default), `metric`, or `imperial` |
 | `tz` | string | No | `UTC` (default), `station`, or IANA name |
@@ -74,12 +75,51 @@ obs = client.observations(station="NYC", units="metric", limit=2, as_dataframe=T
 Field names like `temp_f` retain their original suffix even when converted to metric. The value is in the requested unit system.
 :::
 
+## 1-Minute Resolution (OMO)
+
+Add `resolution=1min` to get 1-minute ASOS observations from NCEI. Available for 19 of 20 stations (NYC/KNYC excluded — Central Park is not an airport ASOS site). Coverage: 2000–2026, ~166M records.
+
+**Important differences from hourly:**
+- `?units=` is rejected with HTTP 400 — temperatures are always integer °C
+- `?type=METAR|SPECI` is silently ignored (OMO data is not METAR/SPECI)
+- `?format=csv|parquet` and `?columns=` work normally
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/observations?station=LAX&resolution=1min&limit=2"
+```
+
+```python
+from therminal import TherminalClient
+
+client = TherminalClient()
+obs = client.observations(station="LAX", resolution="1min", limit=2, as_dataframe=True)
+```
+
+### 1-Minute Response
+
+```json
+[
+  {
+    "station_code": "LAX",
+    "observed_at": "2026-03-20T15:51:00Z",
+    "temp_c": 18,
+    "dewpoint_c": 12,
+    "pressure1_inhg": 29.92,
+    "pressure2_inhg": 29.91,
+    "pressure3_inhg": 29.90,
+    "precip_type": "",
+    "precip_in": 0.00
+  }
+]
+```
+
 ## Try it
 
 <ApiPlayground
   endpoint="/api/v1/observations"
   params={[
     { name: "station", default: "NYC" },
+    { name: "resolution", placeholder: "hourly" },
     { name: "units", placeholder: "raw" },
     { name: "tz", placeholder: "UTC" },
     { name: "limit", default: "3" },
@@ -88,4 +128,4 @@ Field names like `temp_f` retain their original suffix even when converted to me
 
 ## Data source
 
-Live observations from [AWC](https://aviationweather.gov) (5-second polling). Historical from [IEM](https://mesonet.agron.iastate.edu) and [NOAA ISD](https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database). See [Data Sources](/data-sources/) for full details.
+Live observations from [AWC](https://aviationweather.gov) (5-second polling). Historical from [IEM](https://mesonet.agron.iastate.edu) and [NOAA ISD](https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database). 1-minute ASOS data from [NCEI](https://www.ncei.noaa.gov) (DSI-6406). See [Data Sources](/data-sources/) for full details.

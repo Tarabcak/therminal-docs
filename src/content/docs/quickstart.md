@@ -27,6 +27,12 @@ curl "https://api.mostlyright.xyz/api/v1/candles?market=KXHIGHNY-26MAR20-T50&int
 curl "https://api.mostlyright.xyz/api/v1/observations?station=NYC&units=metric&limit=3"
 ```
 
+## Get 1-minute ASOS observations
+
+```bash
+curl "https://api.mostlyright.xyz/api/v1/observations?station=LAX&resolution=1min&limit=3"
+```
+
 ## Get daily climate reports
 
 ```bash

@@ -52,11 +52,34 @@ Kalshi temperature markets cover daily high and low temperatures for 20 US citie
 | PHI | Philadelphia (alt) | America/New_York |
 | TPA | Tampa | America/New_York |
 
+## 1-Minute ASOS Observations (OMO)
+
+| Source | Coverage | Latency | Notes |
+|--------|----------|---------|-------|
+| [NCEI](https://www.ncei.noaa.gov) | 2000–2026 | Historical only | DSI-6406 Page 2 .dat files. ~166M records. |
+
+1-minute ASOS Observation Meteorological Data (OMO) from NCEI provides the highest-resolution surface weather data available in the US. These are raw 1-minute readings from ASOS stations at airports.
+
+### OMO fields
+
+`station_code`, `observed_at`, `temp_c` (integer °C), `dewpoint_c` (integer °C), `pressure1_inhg`, `pressure2_inhg`, `pressure3_inhg`, `precip_type`, `precip_in`.
+
+Temperatures are integer °C only. The `?units=` parameter is rejected with HTTP 400 for `resolution=1min`.
+
+### Station coverage
+
+19 of 20 stations have OMO data. **NYC (KNYC) is excluded** because Central Park is not an airport ASOS site.
+
+### Coverage notes
+
+Overall coverage for 2020–2026 is approximately 78.9%. A significant gap exists in December 2023 due to an NCEI data outage.
+
 ## Daily Climate Reports (CLI)
 
 | Source | Report Types | Coverage | Notes |
 |--------|-------------|----------|-------|
 | [IEM](https://mesonet.agron.iastate.edu) | Final, Correction, Preliminary | ~2002–present | Official NWS CLI products |
+| [NCEI](https://www.ncei.noaa.gov) | ncei_final | ~2000–present | GHCN-Daily CF6 first-published values (superghcnd diffs). Source: `ncei`. |
 | [ACIS](https://www.rcc-acis.org) | Estimated | 1930–present | GHCN-Daily derived. Gap filler only. |
 
 ### Report type priority
@@ -64,6 +87,7 @@ Kalshi temperature markets cover daily high and low temperatures for 20 US citie
 | Type | Priority | Description |
 |------|----------|-------------|
 | `final` | Highest (3) | Official daily report, issued next morning |
+| `ncei_final` | High (2.5) | GHCN-Daily CF6 first-published values from NCEI superghcnd diffs. Source: `ncei`. |
 | `correction` | High (2) | Corrected report (rare) |
 | `preliminary` | Medium (1) | Not used for Kalshi settlement |
 | `estimated` | Lowest (0) | ACIS-derived from GHCN-Daily. Tagged `source: acis`. Never overwrites real reports. |

@@ -11,7 +11,7 @@ pip install therminal-py[pandas]    # + DataFrame + Parquet support
 pip install therminal-py[cli]       # + CLI tool
 ```
 
-Requires Python 3.10+. Published on [PyPI](https://pypi.org/project/therminal-py/).
+Requires Python 3.10+. Current version: v0.3.0. Published on [PyPI](https://pypi.org/project/therminal-py/).
 
 ## Quick example
 
@@ -32,6 +32,9 @@ df = client.candles(
 
 # Weather observations in metric
 obs = client.observations(station="NYC", units="metric", as_dataframe=True)
+
+# 1-minute ASOS observations (v0.3.0+)
+omo = client.observations(station="LAX", resolution="1min", as_dataframe=True)
 ```
 
 ## Export formats
@@ -78,6 +81,7 @@ therminal health
 therminal series --limit 5
 therminal candles KXHIGHNY-26MAR20-T50 --from 2026-03-01 --limit 10
 therminal observations NYC --units metric
+therminal observations LAX --resolution 1min
 therminal climate NYC --from 2026-03-15 --to 2026-03-20
 ```
 

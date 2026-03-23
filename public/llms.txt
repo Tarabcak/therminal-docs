@@ -21,10 +21,10 @@ GET /api/v1/markets/{ticker} — Get market detail
 GET /api/v1/candles?market={ticker}&event={ticker}&station={code}&series={ticker}&from={date}&to={date}&interval={1|5|15|30|60|1440}&fill={true|false}&aggregate={minutes}&tz={timezone}&format={json|csv|parquet}&columns={col1,col2}&limit=10000 — OHLCV candlestick data
 
 ### Observations
-GET /api/v1/observations?station={code}&from={date}&to={date}&type={METAR|SPECI}&units={raw|metric|imperial}&tz={timezone}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Weather observations
+GET /api/v1/observations?station={code}&from={date}&to={date}&resolution={hourly|1min}&type={METAR|SPECI}&units={raw|metric|imperial}&tz={timezone}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Weather observations. resolution=1min returns 1-minute ASOS OMO data (NCEI DSI-6406, 2000–2026, 19/20 stations — no NYC). 1-min fields: station_code, observed_at, temp_c (integer °C), dewpoint_c (integer °C), pressure1_inhg, pressure2_inhg, pressure3_inhg, precip_type, precip_in. units= rejected with 400 for 1min; type= ignored for 1min.
 
 ### Climate
-GET /api/v1/climate?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD}&units={raw|metric}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Daily climate reports
+GET /api/v1/climate?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD}&units={raw|metric}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Daily climate reports. Report types by priority: final (3), ncei_final (2.5, source: ncei, GHCN-Daily CF6 first-published), correction (2), preliminary (1), estimated (0, source: acis).
 
 ### Analysis
 GET /api/v1/analysis/climate-gaps?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD} — Find gaps in climate report history

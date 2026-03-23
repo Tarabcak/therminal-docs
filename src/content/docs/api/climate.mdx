@@ -29,6 +29,7 @@ Returns daily high/low temperature reports from NWS Climate (CLI) products. Thes
 | Type | Priority | Description |
 |------|----------|-------------|
 | `final` | Highest | Official daily report |
+| `ncei_final` | High (2.5) | GHCN-Daily CF6 first-published values (source: `ncei`) |
 | `correction` | High | Corrected report |
 | `preliminary` | Medium | Preliminary (not used for settlement) |
 | `estimated` | Lowest | ACIS-derived gap filler |
@@ -77,4 +78,4 @@ client.climate(station="NYC", from_date="2026-03-18", to_date="2026-03-19")
 
 ## Data source
 
-Official NWS CLI products via [IEM](https://mesonet.agron.iastate.edu). Gaps filled with [ACIS](https://www.rcc-acis.org) estimates (tagged `source: acis`). See [Data Sources](/data-sources/) for report type priority and settlement rules.
+Official NWS CLI products via [IEM](https://mesonet.agron.iastate.edu). GHCN-Daily backfill from [NCEI](https://www.ncei.noaa.gov) (tagged `source: ncei`). Gaps filled with [ACIS](https://www.rcc-acis.org) estimates (tagged `source: acis`). See [Data Sources](/data-sources/) for report type priority and settlement rules.
