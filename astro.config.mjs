@@ -26,6 +26,7 @@ export default defineConfig({
 						{ label: 'Candles', slug: 'api/candles' },
 						{ label: 'Observations', slug: 'api/observations' },
 						{ label: 'Climate', slug: 'api/climate' },
+						{ label: 'LOB', slug: 'api/lob' },
 						{ label: 'Analysis', slug: 'api/analysis' },
 					],
 				},

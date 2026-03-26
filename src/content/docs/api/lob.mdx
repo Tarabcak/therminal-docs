@@ -1,0 +1,168 @@
+---
+title: Limit Order Book
+description: Get reconstructed order book snapshots for prediction markets
+---
+
+import ApiPlayground from '../../../components/ApiPlayground.astro';
+
+Returns reconstructed limit order book snapshots for Kalshi and Polymarket prediction markets. The API replays raw order book deltas from R2 parquet files and captures book state at configurable intervals.
+
+## Request
+
+<span class="http-method">GET</span> `/api/v1/lob`
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `market` | string | Yes* | Market ticker (e.g., `KXHIGHNY-26MAR04-B51`) |
+| `series` | string | Yes* | Series ticker — returns all markets in series |
+| `source` | string | No | Data source: `kalshi` (default) or `polymarket` |
+| `date` | string | Yes** | Single date (`YYYY-MM-DD`) |
+| `from` | string | Yes** | Range start (`YYYY-MM-DD`) |
+| `to` | string | Yes** | Range end (`YYYY-MM-DD`, max 31 days) |
+| `interval` | integer | No | Snapshot frequency in seconds (1–3600). Default: `60` |
+| `levels` | integer | No | Book depth per side (1–50). Default: `10` |
+| `hour` | integer | No | Filter to single hour (0–23) |
+| `format` | string | No | Output format: `json` (default), `csv`, `parquet`, `ndjson` |
+| `columns` | string | No | Comma-separated column names for csv/parquet |
+
+\* One of `market` or `series` required.
+\*\* One of `date` or `from`/`to` required.
+
+### Snapshot interval
+
+The `interval` parameter controls how frequently the order book is sampled (in seconds):
+
+| Interval | Snapshots/day | Use case |
+|----------|--------------|----------|
+| `1` | ~86,400 | HFT analysis, microstructure research |
+| `60` | ~1,440 | Standard analysis, spread tracking (default) |
+| `300` | ~288 | Lightweight overview |
+| `3600` | ~24 | Daily book shape summary |
+
+### Book depth
+
+The `levels` parameter controls how many price levels are returned per side (bids and asks). Default is 10. Max is 50.
+
+### Output formats
+
+| Format | Content-Type | Best for |
+|--------|-------------|----------|
+| `json` | `application/json` | Small queries, single-date |
+| `ndjson` | `application/x-ndjson` | Streaming, multi-date, large ranges |
+| `csv` | `text/csv` | Spreadsheet export |
+| `parquet` | `application/vnd.apache.parquet` | Analytics, DataFrame workflows |
+
+### Result limits
+
+| Format | Max rows |
+|--------|---------|
+| JSON | 50,000 |
+| NDJSON, CSV, Parquet | 500,000 |
+
+At the default `interval=60`, a single date produces ~1,440 rows per market — well within limits.
+
+### Concurrency
+
+LOB reconstruction is CPU-intensive. A maximum of 4 concurrent LOB requests are processed. Additional requests receive `429 Too Many Requests`.
+
+## Example
+
+```bash
+# Single market, single date
+curl "https://api.mostlyright.xyz/api/v1/lob?market=KXHIGHNY-26MAR04-B51&date=2026-03-01"
+
+# All markets in a series, hourly snapshots
+curl "https://api.mostlyright.xyz/api/v1/lob?series=KXHIGHNY-26MAR04&date=2026-03-01&interval=3600"
+
+# Multi-date range as NDJSON (streaming)
+curl "https://api.mostlyright.xyz/api/v1/lob?market=KXHIGHNY-26MAR04-B51&from=2026-03-01&to=2026-03-07&format=ndjson"
+
+# Polymarket source
+curl "https://api.mostlyright.xyz/api/v1/lob?market=0xabc123:0xdef456&source=polymarket&date=2026-03-01"
+```
+
+```python
+from therminal import TherminalClient
+
+client = TherminalClient()
+
+# Single market LOB
+snapshots = client.lob(market="KXHIGHNY-26MAR04-B51", date="2026-03-01")
+
+# As DataFrame
+df = client.lob(
+    market="KXHIGHNY-26MAR04-B51",
+    date="2026-03-01",
+    interval=300,
+    levels=5,
+    as_dataframe=True,
+)
+
+# ML features
+from therminal.ml import LOBFeatures
+from sklearn.pipeline import make_pipeline
+from sklearn.ensemble import GradientBoostingClassifier
+
+pipe = make_pipeline(
+    LOBFeatures(market="KXHIGHNY-26MAR04-B51", interval=60, levels=10),
+    GradientBoostingClassifier(),
+)
+pipe.fit(dates_train, y_train)
+```
+
+## Response
+
+```json
+[
+  {
+    "ts": 1709258460000000000,
+    "market_id": "KXHIGHNY-26MAR04-B51",
+    "best_bid": 45,
+    "best_ask": 46,
+    "spread": 1,
+    "mid": 45.5,
+    "bids": [
+      {"price": 45, "qty": 1000},
+      {"price": 44, "qty": 500}
+    ],
+    "asks": [
+      {"price": 46, "qty": 800},
+      {"price": 47, "qty": 300}
+    ]
+  }
+]
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `ts` | integer | Nanosecond epoch timestamp |
+| `market_id` | string | Market identifier |
+| `best_bid` | integer | Highest bid price (0–99 cents) |
+| `best_ask` | integer | Lowest ask price (0–99 cents) |
+| `spread` | integer | Ask − bid (or −1 if no book) |
+| `mid` | float | (bid + ask) / 2 |
+| `bids` | array | Bid levels sorted high-to-low |
+| `asks` | array | Ask levels sorted low-to-high |
+
+Each level has `price` (integer, cents) and `qty` (integer, contracts).
+
+## Try it
+
+<ApiPlayground
+  endpoint="/api/v1/lob"
+  params={[
+    { name: "market", placeholder: "KXHIGHNY-26MAR04-B51" },
+    { name: "date", default: "2026-03-01" },
+    { name: "source", default: "kalshi" },
+    { name: "interval", default: "60" },
+    { name: "levels", default: "10" },
+  ]}
+/>
+
+## Data source
+
+LOB data is ingested separately from a dedicated collector and stored as consolidated parquet files in Cloudflare R2. Each file contains order book deltas (price changes) for a single series on a single date.
+
+The API reconstructs book state by replaying these deltas and snapshotting at the requested interval. This means the data is reconstructed on-the-fly — not pre-computed snapshots.

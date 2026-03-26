@@ -26,6 +26,9 @@ GET /api/v1/observations?station={code}&from={date}&to={date}&resolution={hourly
 ### Climate
 GET /api/v1/climate?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD}&units={raw|metric}&format={json|csv|parquet}&columns={col1,col2}&limit=1000 — Daily climate reports. Report types by priority: final (3), ncei_final (2.5, source: ncei, GHCN-Daily CF6 first-published), correction (2), preliminary (1), estimated (0, source: acis).
 
+### LOB (Limit Order Book)
+GET /api/v1/lob?market={ticker}&series={ticker}&source={kalshi|polymarket}&date={YYYY-MM-DD}&from={YYYY-MM-DD}&to={YYYY-MM-DD}&interval={1-3600}&levels={1-50}&hour={0-23}&format={json|csv|parquet|ndjson} — Reconstructed order book snapshots. Returns bid/ask levels at configurable intervals. Default: interval=60 (1 snap/min), levels=10, source=kalshi. Max 31-day range. 4 concurrent requests max.
+
 ### Analysis
 GET /api/v1/analysis/climate-gaps?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-DD} — Find gaps in climate report history
 
@@ -33,7 +36,7 @@ GET /api/v1/analysis/climate-gaps?station={code}&from={YYYY-MM-DD}&to={YYYY-MM-D
 - Dates: RFC3339 (2026-03-20T00:00:00Z) or YYYY-MM-DD for candles/observations. YYYY-MM-DD only for climate.
 - Timezone: UTC (default), station (uses station's IANA zone), or any IANA name (e.g., America/New_York)
 - Units: raw (default — °F, knots, inHg, miles), metric (°C, m/s, hPa, km), imperial (°F, mph, inHg, miles)
-- Format: json (default), csv (with Content-Disposition header), parquet (Zstd compressed)
+- Format: json (default), csv (with Content-Disposition header), parquet (Zstd compressed), ndjson (newline-delimited JSON, streaming)
 - Columns: comma-separated list of field names to include in csv/parquet output
 
 ## Station codes

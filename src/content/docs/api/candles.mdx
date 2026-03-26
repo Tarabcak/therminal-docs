@@ -25,7 +25,7 @@ Returns OHLCV (Open, High, Low, Close, Volume) candlestick data for Kalshi tempe
 | `fill` | string | No | Forward-fill gaps. Default: `true`. JSON only — ignored for csv/parquet |
 | `aggregate` | integer | No | Roll up to a larger interval (minutes). E.g., `60` for hourly |
 | `tz` | string | No | Timezone: `UTC` (default), `station`, or IANA name |
-| `format` | string | No | Output format: `json` (default), `csv`, `parquet` |
+| `format` | string | No | Output format: `json` (default), `csv`, `parquet`, `ndjson` |
 | `columns` | string | No | Comma-separated column names to include (e.g., `close,volume`) |
 | `limit` | integer | No | Max results (default 10000) |
 | `offset` | integer | No | Pagination offset |

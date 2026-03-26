@@ -3,6 +3,29 @@ title: Changelog
 description: API version history
 ---
 
+## v1.3.0 — 2026-03-26
+
+### Limit Order Book (LOB)
+- **`GET /api/v1/lob`** — Reconstructed order book snapshots from Kalshi and Polymarket delta data
+- Parameters: `market`, `series`, `source` (kalshi/polymarket), `date`/`from`/`to`, `interval` (1–3600s, default 60), `levels` (1–50, default 10)
+- Supports JSON, CSV, Parquet, and NDJSON output formats
+- Singleflight deduplication for identical concurrent requests
+- 4 concurrent LOB requests max (semaphore-bounded)
+- Result caps: 50K JSON, 500K CSV/Parquet/NDJSON
+
+### NDJSON Format
+- **`?format=ndjson`** now supported on candles, observations, and LOB endpoints
+- Newline-delimited JSON — one object per line, streamable
+- Same 500K row cap as CSV/Parquet
+- No pagination, no forward-fill (returns raw sparse data like CSV)
+
+### Python SDK v0.5.0
+- `client.lob()` — LOB snapshots with full format support, DataFrame, save_path
+- `LOBFeatures` sklearn transformer — spread, mid, imbalance, depth, weighted_mid, pressure features with lookback aggregation
+- CLI: `therminal lob MARKET --date 2026-03-01 --interval 60`
+
+---
+
 ## v1.2.0 — 2026-03-23
 
 ### 1-Minute ASOS Observations (OMO)
