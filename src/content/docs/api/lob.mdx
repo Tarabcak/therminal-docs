@@ -84,15 +84,15 @@ curl "https://api.mostlyright.xyz/api/v1/lob?market=0xabc123:0xdef456&source=pol
 ```
 
 ```python
-from therminal import TherminalClient
+from therminal.markets import MarketsClient
 
-client = TherminalClient()
+markets = MarketsClient()
 
 # Single market LOB
-snapshots = client.lob(market="KXHIGHNY-26MAR04-B51", date="2026-03-01")
+snapshots = markets.lob(market="KXHIGHNY-26MAR04-B51", date="2026-03-01")
 
 # As DataFrame
-df = client.lob(
+df = markets.lob(
     market="KXHIGHNY-26MAR04-B51",
     date="2026-03-01",
     interval=300,

@@ -55,10 +55,22 @@ pip install therminal-py
 ```
 
 ```python
-from therminal import TherminalClient
+from therminal.weather import WeatherClient, LiveClient
+from therminal.markets import MarketsClient
 
-client = TherminalClient()
-candles = client.candles(market="KXHIGHNY-26MAR20-T50", from_date="2026-03-01")
+# Historical data (via API)
+weather = WeatherClient()
+obs = weather.observations(station="NYC", units="metric")
+
+# Live METAR (direct from AWC — same schema as historical)
+live = LiveClient()
+current = live.current(["NYC", "ATL", "MDW"])
+
+# Market data
+markets = MarketsClient()
+candles = markets.candles(market="KXHIGHNY-26MAR20-T50", from_date="2026-03-01")
 ```
+
+`from therminal import TherminalClient` still works for backward compatibility.
 
 See the [Python SDK](/sdk) page for full documentation.

@@ -59,10 +59,10 @@ curl "https://api.mostlyright.xyz/api/v1/candles?market=KXHIGHNY-26MAR20-T50&int
 ```
 
 ```python
-from therminal import TherminalClient
+from therminal.markets import MarketsClient
 
-client = TherminalClient()
-candles = client.candles(
+markets = MarketsClient()
+candles = markets.candles(
     market="KXHIGHNY-26MAR20-T50",
     interval=1,
     from_date="2026-03-19",

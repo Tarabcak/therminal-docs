@@ -29,9 +29,9 @@ curl "https://api.mostlyright.xyz/api/v1/markets?series=KXHIGHNY&limit=3"
 ```
 
 ```python
-from therminal import TherminalClient
-client = TherminalClient()
-client.markets(series="KXHIGHNY", limit=3)
+from therminal.markets import MarketsClient
+markets = MarketsClient()
+markets.markets(series="KXHIGHNY", limit=3)
 ```
 
 ### Response

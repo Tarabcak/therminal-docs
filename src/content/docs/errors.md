@@ -40,19 +40,32 @@ All errors return JSON:
 ## Python SDK error handling
 
 ```python
-from therminal import TherminalClient, NotFoundError, RateLimitError
+from therminal import NotFoundError, RateLimitError
+from therminal.weather import WeatherClient
 import time
 
-client = TherminalClient()
+weather = WeatherClient()
 
 try:
-    series = client.series_detail("NONEXISTENT")
+    obs = weather.observations(station="NONEXISTENT")
 except NotFoundError:
-    print("Series not found")
+    print("Station not found")
 except RateLimitError as e:
     print(f"Rate limited. Retry after {e.retry_after}s")
     time.sleep(e.retry_after)
 ```
+
+### LiveClient errors
+
+LiveClient maps AWC (aviationweather.gov) errors to the same exception types:
+
+| AWC Response | SDK Exception | Behavior |
+|-------------|---------------|----------|
+| 429 | `RateLimitError` | Retries up to `max_retries` (default 3), then raises |
+| 5xx | `ServerError` | Retries with exponential backoff, then raises |
+| Timeout | `TherminalError` | Raises after `live_timeout` (default 10s) |
+| Empty response | No error | Returns empty `list[]` |
+| Unknown station | No error | Returns empty `list[]` |
 
 ### Exception hierarchy
 

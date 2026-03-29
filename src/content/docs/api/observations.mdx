@@ -45,10 +45,10 @@ curl "https://api.mostlyright.xyz/api/v1/observations?station=NYC&units=metric&l
 ```
 
 ```python
-from therminal import TherminalClient
+from therminal.weather import WeatherClient
 
-client = TherminalClient()
-obs = client.observations(station="NYC", units="metric", limit=2, as_dataframe=True)
+weather = WeatherClient()
+obs = weather.observations(station="NYC", units="metric", limit=2, as_dataframe=True)
 ```
 
 ## Response
@@ -89,10 +89,19 @@ curl "https://api.mostlyright.xyz/api/v1/observations?station=LAX&resolution=1mi
 ```
 
 ```python
-from therminal import TherminalClient
+from therminal.weather import WeatherClient
 
-client = TherminalClient()
-obs = client.observations(station="LAX", resolution="1min", limit=2, as_dataframe=True)
+weather = WeatherClient()
+obs = weather.observations(station="LAX", resolution="1min", limit=2, as_dataframe=True)
+```
+
+## Live METAR (SDK)
+
+```python
+from therminal.weather import LiveClient
+
+live = LiveClient()
+current = live.current("NYC")  # Real-time from AWC, same Observation schema
 ```
 
 ### 1-Minute Response

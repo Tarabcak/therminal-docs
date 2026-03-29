@@ -26,9 +26,9 @@ curl "https://api.mostlyright.xyz/api/v1/series?active=true&limit=5"
 ```
 
 ```python
-from therminal import TherminalClient
-client = TherminalClient()
-client.series(active=True, limit=5)
+from therminal.markets import MarketsClient
+markets = MarketsClient()
+markets.series(active=True, limit=5)
 ```
 
 ### Response
@@ -68,7 +68,7 @@ curl "https://api.mostlyright.xyz/api/v1/series/KXHIGHNY"
 ```
 
 ```python
-client.series_detail("KXHIGHNY")
+markets.series_detail("KXHIGHNY")
 ```
 
 Returns a single series object. Returns `404` if not found.

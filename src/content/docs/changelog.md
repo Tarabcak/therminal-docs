@@ -3,6 +3,23 @@ title: Changelog
 description: API version history
 ---
 
+## v1.4.0 — 2026-03-30
+
+### Python SDK v1.0.0 — Ergonomics Rewrite
+
+- **Domain-split modules**: `therminal.weather` (WeatherClient, LiveClient) and `therminal.markets` (MarketsClient)
+- **LiveClient**: Real-time METAR from AWC (aviationweather.gov), direct fetch with identical Observation schema to historical data
+  - Batch support: `live.current(["NYC", "ATL", "MDW"])` makes one AWC request
+  - Go-matched rounding ensures training/inference parity
+- **TherminalConfig**: `~/.therminal.toml` config file with 4-layer resolution (file < env vars < kwargs)
+- **Typed models**: Frozen dataclasses (Observation, Candle, Market, Series, Climate, LOBSnapshot) with dict-style access for backward compat
+- **DictLikeMixin**: `obs["temp_f"]`, `obs.get("temp_f")`, and `obs.temp_f` all work
+- Python 3.11+ required (dropped 3.10)
+- `TherminalClient` facade preserved for backward compatibility
+- 184 tests, 80% coverage
+
+---
+
 ## v1.3.0 — 2026-03-26
 
 ### Limit Order Book (LOB)

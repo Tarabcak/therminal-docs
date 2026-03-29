@@ -48,8 +48,29 @@ JSON: 50,000 rows max (paginated via limit/offset, default 1000, max 10000 per p
 ## Rate limits
 100 requests/second per IP, burst 20. 429 response with Retry-After header when exceeded.
 
-## Python SDK
+## Python SDK (v1.0.0)
 pip install therminal-py
+Requires Python 3.11+.
+
+Domain-split clients:
+- from therminal.weather import WeatherClient, LiveClient
+- from therminal.markets import MarketsClient
+- from therminal.config import TherminalConfig
+
+LiveClient — real-time METAR from AWC (aviationweather.gov), schema-identical to historical WeatherClient.observations():
+  live = LiveClient()
+  obs = live.current("NYC")           # single station
+  obs = live.current(["NYC", "ATL"])  # batch (one AWC request)
+  obs = live.latest("NYC", hours=3)   # recent history
+
+Config file (~/.therminal.toml):
+  [defaults]
+  units = "metric"
+  station = "NYC"
+
+Backward compatible: from therminal import TherminalClient still works.
+ML features: from therminal.ml import WeatherFeatures, LOBFeatures, TherminalDataset
+
 Documentation: https://pypi.org/project/therminal-py/
 
 ## Full documentation
