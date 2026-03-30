@@ -48,7 +48,7 @@ JSON: 50,000 rows max (paginated via limit/offset, default 1000, max 10000 per p
 ## Rate limits
 100 requests/second per IP, burst 20. 429 response with Retry-After header when exceeded.
 
-## Python SDK (v1.0.3)
+## Python SDK (v1.0.5)
 pip install therminal-py
 Requires Python 3.11+.
 

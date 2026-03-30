@@ -14,9 +14,9 @@ pip install therminal-py[cli]       # + CLI tool
 pip install therminal-py[all]       # pandas + ml + cli
 ```
 
-Requires Python 3.11+. Current version: **v1.0.3**. Published on [PyPI](https://pypi.org/project/therminal-py/).
+Requires Python 3.11+. Current version: **v1.0.5**. Published on [PyPI](https://pypi.org/project/therminal-py/).
 
-## What's new in v1.0.3
+## What's new in v1.0.5
 
 - **Domain-split modules**: `therminal.weather` (observations, climate) and `therminal.markets` (series, markets, candles, LOB)
 - **Canonical names**: `WeatherHistory` (was `WeatherClient`) and `WeatherLive` (was `LiveClient`) -- old names still work as aliases
