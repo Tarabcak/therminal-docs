@@ -5,22 +5,25 @@ description: API version history
 
 ## v1.4.0 — 2026-03-30
 
-### Python SDK v1.0.5 — Ergonomics Rewrite
+### Python SDK v1.0.6 — Ergonomics Rewrite
 
 - **Domain-split modules**: `therminal.weather` (WeatherHistory, WeatherLive) and `therminal.markets` (MarketsClient)
 - **Canonical names**: `WeatherClient` renamed to `WeatherHistory`, `LiveClient` renamed to `WeatherLive`
 - **WeatherLive**: Real-time METAR from AWC (aviationweather.gov), direct fetch with identical Observation schema to historical data
   - Batch support: `live.current(["NYC", "ATL", "MDW"])` makes one AWC request
   - `as_dataframe=True` on `current()` and `latest()`
-  - Relative humidity computed from temp + dewpoint via Magnus formula (native Celsius, no F rounding loss)
+  - Relative humidity computed via Magnus formula (native Celsius, cross-checked against IEM for 18 stations)
+  - Feels-like temperature via full NWS algorithm (wind chill + Steadman + Rothfusz + adjustments)
+  - Precipitation mapped from AWC `precip` field
+  - Peak wind gust/direction/time parsed from raw METAR `PK WND` remarks
   - Go-matched rounding ensures training/inference parity
 - **Auto-pagination**: JSON responses transparently paginated, `as_dataframe=True` uses parquet for full datasets (no 50K JSON cap)
 - **TherminalConfig**: `~/.therminal.toml` config file with 4-layer resolution (file < env vars < kwargs)
 - **Typed models**: Frozen dataclasses with dict-style access (`obs["temp_f"]`, `obs.get()`, `obs.temp_f`)
-- **Security hardening**: guarded float() on all AWC numeric fields, truncated unbounded strings
+- **Security hardening**: guarded float() on all AWC numeric fields, direction validation, truncated unbounded strings
 - Python 3.11+ required (dropped 3.10)
 - `TherminalClient` facade preserved for backward compatibility
-- 194 tests, 80% coverage
+- 206 tests, 80% coverage
 
 ---
 
