@@ -55,15 +55,15 @@ pip install therminal-py
 ```
 
 ```python
-from therminal.weather import WeatherClient, LiveClient
+from therminal.weather import WeatherHistory, WeatherLive
 from therminal.markets import MarketsClient
 
 # Historical data (via API)
-weather = WeatherClient()
+weather = WeatherHistory()
 obs = weather.observations(station="NYC", units="metric")
 
 # Live METAR (direct from AWC — same schema as historical)
-live = LiveClient()
+live = WeatherLive()
 current = live.current(["NYC", "ATL", "MDW"])
 
 # Market data

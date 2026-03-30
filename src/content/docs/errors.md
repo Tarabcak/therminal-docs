@@ -41,10 +41,10 @@ All errors return JSON:
 
 ```python
 from therminal import NotFoundError, RateLimitError
-from therminal.weather import WeatherClient
+from therminal.weather import WeatherHistory
 import time
 
-weather = WeatherClient()
+weather = WeatherHistory()
 
 try:
     obs = weather.observations(station="NONEXISTENT")
@@ -55,9 +55,9 @@ except RateLimitError as e:
     time.sleep(e.retry_after)
 ```
 
-### LiveClient errors
+### WeatherLive errors
 
-LiveClient maps AWC (aviationweather.gov) errors to the same exception types:
+WeatherLive maps AWC (aviationweather.gov) errors to the same exception types:
 
 | AWC Response | SDK Exception | Behavior |
 |-------------|---------------|----------|

@@ -5,10 +5,11 @@ description: API version history
 
 ## v1.4.0 — 2026-03-30
 
-### Python SDK v1.0.0 — Ergonomics Rewrite
+### Python SDK v1.0.3 — Ergonomics Rewrite
 
-- **Domain-split modules**: `therminal.weather` (WeatherClient, LiveClient) and `therminal.markets` (MarketsClient)
-- **LiveClient**: Real-time METAR from AWC (aviationweather.gov), direct fetch with identical Observation schema to historical data
+- **Domain-split modules**: `therminal.weather` (WeatherHistory, WeatherLive) and `therminal.markets` (MarketsClient)
+- **Canonical names**: `WeatherClient` renamed to `WeatherHistory`, `LiveClient` renamed to `WeatherLive` (old names still work as aliases)
+- **WeatherLive**: Real-time METAR from AWC (aviationweather.gov), direct fetch with identical Observation schema to historical data
   - Batch support: `live.current(["NYC", "ATL", "MDW"])` makes one AWC request
   - Go-matched rounding ensures training/inference parity
 - **TherminalConfig**: `~/.therminal.toml` config file with 4-layer resolution (file < env vars < kwargs)

@@ -50,19 +50,19 @@ For 1-minute ASOS data, 500K rows covers ~347 days for a single station. Use `?f
 pip install therminal-py
 ```
 
-The [Python SDK](/sdk/) (v1.0.0) provides domain-split clients, a config file, and **LiveClient** for real-time METAR observations from AWC with schema-identical output to historical data.
+The [Python SDK](/sdk/) (v1.0.3) provides domain-split clients, a config file, and **WeatherLive** for real-time METAR observations from AWC with schema-identical output to historical data.
 
 ```python
-from therminal.weather import WeatherClient, LiveClient
+from therminal.weather import WeatherHistory, WeatherLive
 
-weather = WeatherClient()                              # Historical (via API)
-live = LiveClient()                                    # Real-time (via AWC)
+weather = WeatherHistory()                             # Historical (via API)
+live = WeatherLive()                                   # Real-time (via AWC)
 current = live.current(["NYC", "ATL"])                 # Same Observation type
 ```
 
 ## Full documentation
 
 - [API Reference](/api/candles/) — All endpoints with interactive playground
-- [Python SDK](/sdk/) — Domain clients, LiveClient, config, ML features
+- [Python SDK](/sdk/) — Domain clients, WeatherLive, config, ML features
 - [Data Sources](/data-sources/) — Where the data comes from
 - [Rate Limits & Errors](/errors/) — Error codes and rate limiting

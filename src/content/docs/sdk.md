@@ -14,12 +14,13 @@ pip install therminal-py[cli]       # + CLI tool
 pip install therminal-py[all]       # pandas + ml + cli
 ```
 
-Requires Python 3.11+. Current version: **v1.0.0**. Published on [PyPI](https://pypi.org/project/therminal-py/).
+Requires Python 3.11+. Current version: **v1.0.3**. Published on [PyPI](https://pypi.org/project/therminal-py/).
 
-## What's new in v1.0.0
+## What's new in v1.0.3
 
 - **Domain-split modules**: `therminal.weather` (observations, climate) and `therminal.markets` (series, markets, candles, LOB)
-- **LiveClient**: Real-time METAR from AWC (aviationweather.gov) with identical schema to historical data
+- **Canonical names**: `WeatherHistory` (was `WeatherClient`) and `WeatherLive` (was `LiveClient`) -- old names still work as aliases
+- **WeatherLive**: Real-time METAR from AWC (aviationweather.gov) with identical schema to historical data
 - **Config file**: `~/.therminal.toml` with sensible defaults, env var overrides, per-call overrides
 - **Typed models**: Frozen dataclasses for all return types (Observation, Candle, Market, etc.)
 - Backward compatible: `from therminal import TherminalClient` still works
@@ -27,15 +28,15 @@ Requires Python 3.11+. Current version: **v1.0.0**. Published on [PyPI](https://
 ## Quick example
 
 ```python
-from therminal.weather import WeatherClient, LiveClient
+from therminal.weather import WeatherHistory, WeatherLive
 from therminal.markets import MarketsClient
 
 # Historical data (via therminal-api)
-weather = WeatherClient()
+weather = WeatherHistory()
 obs = weather.observations(station="NYC", units="metric", as_dataframe=True)
 
 # Live METAR (direct from AWC — same schema as historical)
-live = LiveClient()
+live = WeatherLive()
 current = live.current("NYC")
 print(current[0].temp_f)  # attribute access
 print(current[0]["temp_f"])  # dict access also works
@@ -95,18 +96,18 @@ config = TherminalConfig()
 config = TherminalConfig(units="metric", tz="America/New_York")
 
 # Pass to any client
-weather = WeatherClient(config=config)
-live = LiveClient(config=config)
+weather = WeatherHistory(config=config)
+live = WeatherLive(config=config)
 ```
 
 ## Live METAR (AWC direct)
 
-`LiveClient` fetches real-time METAR observations directly from the Aviation Weather Center. The returned `Observation` objects are schema-identical to what `WeatherClient.observations()` returns, so your training features and live signals use the same types.
+`WeatherLive` fetches real-time METAR observations directly from the Aviation Weather Center. The returned `Observation` objects are schema-identical to what `WeatherHistory.observations()` returns, so your training features and live signals use the same types.
 
 ```python
-from therminal.weather import LiveClient
+from therminal.weather import WeatherLive
 
-live = LiveClient()
+live = WeatherLive()
 
 # Latest observation for one station
 obs = live.current("NYC")
@@ -260,10 +261,10 @@ loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=True)
 
 ```python
 from therminal import NotFoundError, RateLimitError
-from therminal.weather import WeatherClient
+from therminal.weather import WeatherHistory
 import time
 
-weather = WeatherClient()
+weather = WeatherHistory()
 
 try:
     data = weather.observations(station="NONEXISTENT")
@@ -273,7 +274,7 @@ except RateLimitError as e:
     time.sleep(e.retry_after)
 ```
 
-LiveClient maps AWC errors to the same exception types:
+WeatherLive maps AWC errors to the same exception types:
 - AWC 429 → `RateLimitError`
 - AWC 5xx → `ServerError` (retries automatically, max 3)
 - Timeout → `TherminalError`
@@ -283,8 +284,8 @@ LiveClient maps AWC errors to the same exception types:
 
 | Import | Class | Purpose |
 |--------|-------|---------|
-| `therminal.weather` | `WeatherClient` | Historical observations, climate, climate gaps |
-| `therminal.weather` | `LiveClient` | Real-time METAR from AWC |
+| `therminal.weather` | `WeatherHistory` | Historical observations, climate, climate gaps |
+| `therminal.weather` | `WeatherLive` | Real-time METAR from AWC |
 | `therminal.markets` | `MarketsClient` | Series, markets, candles, LOB |
 | `therminal.config` | `TherminalConfig` | SDK configuration |
 | `therminal.models` | `Observation`, `Candle`, `Market`, `Series`, `Climate`, `LOBSnapshot` | Typed data models |

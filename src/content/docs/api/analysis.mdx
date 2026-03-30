@@ -28,8 +28,8 @@ curl "https://api.mostlyright.xyz/api/v1/analysis/climate-gaps?station=NYC&from=
 ```
 
 ```python
-from therminal.weather import WeatherClient
-weather = WeatherClient()
+from therminal.weather import WeatherHistory
+weather = WeatherHistory()
 weather.climate_gaps(station="NYC", from_date="2026-03-01")
 ```
 

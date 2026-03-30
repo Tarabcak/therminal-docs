@@ -41,8 +41,8 @@ curl "https://api.mostlyright.xyz/api/v1/climate?station=NYC&from=2026-03-18&to=
 ```
 
 ```python
-from therminal.weather import WeatherClient
-weather = WeatherClient()
+from therminal.weather import WeatherHistory
+weather = WeatherHistory()
 weather.climate(station="NYC", from_date="2026-03-18", to_date="2026-03-19")
 ```
 
