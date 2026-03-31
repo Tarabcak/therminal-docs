@@ -3,6 +3,22 @@ title: Changelog
 description: API version history
 ---
 
+## v1.4.1 — 2026-03-31
+
+### Python SDK v1.0.7 — Quality Gate
+
+- **Integration test suite**: 45 parametric E2E tests against the live API + AWC, covering every public function x every output mode (list, DataFrame, CSV, parquet)
+- **CI publish gate**: integration tests must pass before PyPI publish on tag push
+- **Fix: parquet bytes→str**: DataFrame columns from parquet now return `str`, not `bytes` (PyArrow `types_mapper`)
+- **Fix: climate dates tz-naive**: climate `observation_date` index stays tz-naive (calendar dates), not UTC
+- **Fix: LOB numeric index**: LOB `ts` column correctly detected as numeric epoch, not parsed as date string
+- **Fix: empty DataFrame NaN edge case**: empty result sets no longer misclassify index timezone
+- **Fix: DataFrame immutability**: `_apply_datetime_index` no longer mutates input DataFrame
+- **CI security**: `pypa/gh-action-pypi-publish` pinned to commit SHA, publish step gated on tag ref
+- 206 unit tests + 45 integration tests
+
+---
+
 ## v1.4.0 — 2026-03-30
 
 ### Python SDK v1.0.6 — Ergonomics Rewrite

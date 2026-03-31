@@ -14,16 +14,15 @@ pip install therminal-py[cli]       # + CLI tool
 pip install therminal-py[all]       # pandas + ml + cli
 ```
 
-Requires Python 3.11+. Current version: **v1.0.6**. Published on [PyPI](https://pypi.org/project/therminal-py/).
+Requires Python 3.11+. Current version: **v1.0.7**. Published on [PyPI](https://pypi.org/project/therminal-py/).
 
-## What's new in v1.0.6
+## What's new in v1.0.7
 
-- **Domain-split modules**: `therminal.weather` (observations, climate) and `therminal.markets` (series, markets, candles, LOB)
-- **Canonical names**: `WeatherHistory` (was `WeatherClient`) and `WeatherLive` (was `LiveClient`) -- old names still work as aliases
-- **WeatherLive**: Real-time METAR from AWC (aviationweather.gov) with identical schema to historical data
-- **Config file**: `~/.therminal.toml` with sensible defaults, env var overrides, per-call overrides
-- **Typed models**: Frozen dataclasses for all return types (Observation, Candle, Market, etc.)
-- Backward compatible: `from therminal import TherminalClient` still works
+- **Integration test suite**: 45 E2E tests against the live API + AWC gate every PyPI release
+- **Fix: parquet DataFrames**: columns return `str` not `bytes`, climate dates stay tz-naive, LOB timestamps stay numeric
+- **Fix: empty results**: empty DataFrames no longer crash or misclassify index timezone
+- **Fix: immutability**: DataFrame index conversion no longer mutates the input
+- All 206 unit tests + 45 integration tests pass before publish
 
 ## Quick example
 
