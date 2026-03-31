@@ -3,6 +3,17 @@ title: Changelog
 description: API version history
 ---
 
+## v1.4.2 — 2026-03-31
+
+### Fix: Parquet Null-to-Zero
+
+- **Fix: parquet nullable columns**: Observation parquet files now use `Optional` schema for nullable fields. Previously, the Go API inferred the parquet schema from the first row only and created non-nullable columns — null values were silently written as zero (0 for int, 0.0 for float), skewing downstream analysis. JSON was unaffected.
+- **API**: `writeParquetTyped` now scans all rows for the full column union and wraps nullable columns with `parquet.Optional()`
+- **Python SDK**: 7 new regression tests verifying nullable parquet columns produce `NaN` in DataFrames, not `0`. No SDK code changes needed — PyArrow handles optional columns correctly.
+- 213 unit tests + 45 integration tests
+
+---
+
 ## v1.4.1 — 2026-03-31
 
 ### Python SDK v1.0.7 — Quality Gate
